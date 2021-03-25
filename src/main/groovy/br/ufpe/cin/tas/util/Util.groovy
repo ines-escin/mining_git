@@ -67,7 +67,30 @@ class Util {
         p
     }
 
-    static boolean isTestFile(path) {
+    static boolean isGherkinFile(path){
+        if(!path || path.empty) return false
+        def p = configurePath(path)
+        if( (p.startsWith("test${File.separator}") || p.contains("${File.separator}test${File.separator}")) &&
+                p.endsWith(".feature"))
+            true
+        else false
+    }
+
+    static boolean isTestFile(path){
+        if(!path || path.empty) return false
+        def p = configurePath(path)
+        if(DataProperties.UNDEFINED_DIRECTORY_STRUCTURE){
+            if( p.startsWith("test${File.separator}") || p.contains("${File.separator}test${File.separator}") )
+                true
+            else false
+        } else {
+            if (p.startsWith(DataProperties.GHERKIN_FOLDER) || p.startsWith(DataProperties.STEPS_FOLDER) ||
+                    p.startsWith(DataProperties.UNIT_FOLDER)) true
+            else false
+        }
+    }
+
+    static boolean isTestFileOfInterest(path) {
         if(!path || path.empty) return false
         def p = configurePath(path)
         if(DataProperties.UNDEFINED_DIRECTORY_STRUCTURE){
@@ -83,7 +106,7 @@ class Util {
 
     static boolean isProductionFile(path) {
         if(!path || path.empty) return false
-        if (isValidFile(path) && !isTestFile(path) && !isSecondaryTestFile(path)) true
+        if (isValidFile(path) && !isTestFileOfInterest(path) && !isSecondaryTestFile(path) && !isTestFile(path)) true
         else false
     }
 

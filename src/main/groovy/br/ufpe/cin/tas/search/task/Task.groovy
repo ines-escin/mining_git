@@ -38,7 +38,7 @@ class Task {
     private organizeFiles(){
         changedFiles = commits*.files?.flatten()?.unique()
         changedFiles?.each { file ->
-            if (Util.isTestFile(file)) testFiles += file
+            if (Util.isTestFileOfInterest(file)) testFiles += file
             else if(Util.isProductionFile(file)) productionFiles += file
         }
     }
